@@ -1,0 +1,38 @@
+{
+  "name": "Log Behaviour",
+  "version": "1.0",
+  "description": "Logging the user behaviors on screen!",
+  "manifest_version": 2,
+  "background": {
+    "scripts": ["log_behavior.js"],
+    "persistent": false
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://stackoverflow.com/*"],
+      "js": ["ContentScripts/contentScript.js"]
+    },
+    {
+      "matches": ["http://localhost:3000/*"],
+      "js": ["ContentScripts/contentScriptLogin.js"]
+    }
+  ],
+  "options_page": "options.html",
+  "permissions": ["storage","declarativeContent","activeTab"],
+  "page_action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "images/get_started16.png",
+      "32": "images/get_started32.png",
+      "48": "images/get_started48.png",
+      "128": "images/get_started128.png"
+    },
+
+    "icons": {
+      "16": "images/get_started16.png",
+      "32": "images/get_started32.png",
+      "48": "images/get_started48.png",
+      "128": "images/get_started128.png"
+    }
+  }
+}
