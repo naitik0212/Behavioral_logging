@@ -1,0 +1,1042 @@
+<html>
+
+<style>
+    :root {
+        --input-padding-x: 1.5rem;
+        --input-padding-y: .75rem;
+    }
+
+    body {
+        background: #9CECFB;
+        /* fallback for old browsers */
+        background: -webkit-linear-gradient(to right, #65C7F7, #9CECFB, white);
+        /* Chrome 10-25, Safari 5.1-6 */
+        background: linear-gradient(to right, #65C7F7, #9CECFB, white);
+        /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    }
+
+    .axis path,
+    .axis line {
+        fill: none;
+        stroke: #000;
+        shape-rendering: crispEdges;
+    }
+
+    .bar {
+        fill: orange;
+    }
+
+    .bar:hover {
+        fill: orangered;
+    }
+
+    .x.axis path {
+        display: none;
+    }
+
+    .d3-tip {
+        line-height: 1;
+        font-weight: bold;
+        padding: 12px;
+        background: rgba(0, 0, 0, 0.8);
+        color: #fff;
+        border-radius: 2px;
+    }
+
+    /* Creates a small triangle extender for the tooltip */
+    .d3-tip:after {
+        box-sizing: border-box;
+        display: inline;
+        font-size: 10px;
+        width: 100%;
+        line-height: 1;
+        color: rgba(0, 0, 0, 0.8);
+        content: "\25BC";
+        position: absolute;
+        text-align: center;
+    }
+
+    /* Style northward tooltips differently */
+    .d3-tip.n:after {
+        margin: -1px 0 0 0;
+        top: 100%;
+        left: 0;
+    }
+
+    .card-signin {
+        border: 0;
+        border-radius: 1rem;
+        box-shadow: 0 0.5rem 1rem 0 rgba(0, 0, 0, 0.1);
+    }
+
+    .card-signin .card-title {
+        margin-bottom: 2rem;
+        font-weight: 300;
+        font-size: 1.5rem;
+    }
+
+    .card-signin .card-body {
+        padding: 2rem;
+    }
+
+    .form-signin {
+        width: 100%;
+    }
+
+    .form-signin .btn {
+        font-size: 80%;
+        border-radius: 5rem;
+        letter-spacing: .1rem;
+        font-weight: bold;
+        padding: 1rem;
+        transition: all 0.2s;
+    }
+
+    .form-label-group {
+        position: relative;
+        margin-bottom: 1rem;
+    }
+
+    .form-label-group input {
+        border-radius: 2rem;
+    }
+
+    .form-label-group > input,
+    .form-label-group > label {
+        padding: var(--input-padding-y) var(--input-padding-x);
+    }
+
+    .form-label-group > label {
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: block;
+        width: 100%;
+        margin-bottom: 0;
+        /* Override default `<label>` margin */
+        line-height: 1.5;
+        color: #495057;
+        border: 1px solid transparent;
+        border-radius: .25rem;
+        transition: all .1s ease-in-out;
+    }
+
+    .form-label-group input::-webkit-input-placeholder {
+        color: transparent;
+    }
+
+    .form-label-group input:-ms-input-placeholder {
+        color: transparent;
+    }
+
+    .form-label-group input::-ms-input-placeholder {
+        color: transparent;
+    }
+
+    .form-label-group input::-moz-placeholder {
+        color: transparent;
+    }
+
+    .form-label-group input::placeholder {
+        color: transparent;
+    }
+
+    .form-label-group input:not(:placeholder-shown) {
+        padding-top: calc(var(--input-padding-y) + var(--input-padding-y) * (2 / 3));
+        padding-bottom: calc(var(--input-padding-y) / 3);
+    }
+
+    .form-label-group input:not(:placeholder-shown) ~ label {
+        padding-top: calc(var(--input-padding-y) / 3);
+        padding-bottom: calc(var(--input-padding-y) / 3);
+        font-size: 12px;
+        color: #777;
+    }
+
+    .flex {
+        display: flex;
+        text-align: right;
+    }
+
+    .vertical {
+        flex-direction: column;
+        margin: 0 1em;
+    }
+
+    .vertical div:first-child {
+        font-weight: bold;
+    }
+
+    .outer {
+        align-items: flex-end;
+    }
+
+    .outer > div:first-child {
+        border-right: 1px solid black;
+        padding-right: 1em;
+        margin-right: .5em;
+    }
+
+    .col {
+        margin: 0 .5em;
+    }
+
+    .col div:first-child, .outer > div:first-child {
+        font-weight: bold;
+    }
+
+</style>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+<body onload="updatePage();">
+
+<div class="container">
+    <div class="container">
+        <div class="float-right">
+            <br>
+            <button class="btn btn-danger" onclick="logout()">Logout</button>
+        </div>
+        <div class="row" style="text-align: center">
+
+            <div class="col-sm-9 col-md-7 col-lg-5 mx-auto" >
+                <div class="card card-signin my-5 ">
+                    <div class="card-body">
+
+
+                        <fieldset disabled>
+                            <div class="form-group overlay">
+                                <h4>Welcome to Visualizations</h4>
+                                <input style="text-align: center" type="text" id="username"
+                                       class="form-label-group form-control" placeholder="">
+                            </div>
+                        </fieldset>
+
+                        <a href="https://stackoverflow.com/questions/tagged/java?sort=frequent&pageSize=15" target="_blank" style="color: red">Go To StackOverflow</a>
+                        <br/>
+                        <br/>
+
+                        <button class="btn btn-success" onclick="navigate()">Profile Page</button>
+                        <button class="btn btn-info" onclick="writeup()">WriteUp</button>
+
+                    </div>
+                </div>
+            </div>
+        </div>       <hr/> <h3 style="text-align: center">Welcome to Summary of Interactions on stackoverflow</h3>
+
+        <hr/>
+
+    </div>
+</div>
+
+
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+<script>
+
+    function createGraphFreq(data) {
+
+
+        var margin = {top: 10, right: 20, bottom: 50, left: 100},
+
+            width = window.innerWidth - margin.left - margin.right,
+            height = window.innerHeight/1.5 - margin.top - margin.bottom;
+
+        // var margin = {top: 40, right: 20, bottom: 30, left: 40},
+        //     width = 960 - margin.left - margin.right,
+        //     height = 500 - margin.top - margin.bottom;
+        //
+        var formatPercent = d3.format(".0%");
+
+        var x = d3.scale.ordinal()
+            .rangeRoundBands([0, width], .1);
+
+        var y = d3.scale.linear()
+            .range([height, 0]);
+
+        var xAxis = d3.svg.axis()
+            .scale(x)
+            .orient("bottom");
+
+        var yAxis = d3.svg.axis()
+            .scale(y)
+            .orient("left")
+            .tickFormat(formatPercent);
+
+        var tip = d3.tip()
+            .attr('class', 'd3-tip')
+            .offset([-10, 0])
+            .html(function (d) {
+                return "<strong>Frequency of Click:</strong> <span style='color:red'>" + d3.format(".5%")(d.frequency) + "</span>";
+            })
+
+        var svg = d3.select("body").append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        svg.call(tip);
+
+
+        // console.log(data);
+        x.domain(data.map(function (d) {
+            return d.stat;
+        }));
+        y.domain([0, d3.max(data, function (d) {
+            return d.frequency;
+        })]);
+
+        svg.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + height + ")")
+            .call(xAxis);
+
+        svg.append("g")
+            .attr("class", "y axis")
+            .call(yAxis)
+            .append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 7)
+            .attr("dy", ".71em")
+            .style("text-anchor", "end")
+            .text("Frequency");
+
+        svg.selectAll(".bar")
+            .data(data)
+            .enter().append("rect")
+            .attr("class", "bar")
+            .attr("x", function (d) {
+                return x(d.stat);
+            })
+            .attr("width", x.rangeBand())
+            .attr("y", function (d) {
+                return y(d.frequency);
+            })
+            .attr("height", function (d) {
+                return height - y(d.frequency);
+            })
+            .on("mouseover", function(d) {
+                d3.select(this).style("cursor", "pointer");
+                update.call(this, d.frequency,d.stat);
+                tip.show.call(this, d);
+            })
+            .on('mouseout', tip.hide)
+            .on('click',function (d) {console.log(d.stat)})
+        // .on('mouseover', tip.show)
+
+
+
+        function type(d) {
+            d.frequency = + d.frequency;
+            return d;
+        }
+
+        function update(freq, stat) {
+            var a = d3.select("#acs")
+            a.selectAll("*").remove();
+
+            var updated = d3.format(".2%")(freq);
+
+            // console.log(updated);
+            var svg = d3.select("#acs")
+                .append("text")
+                .attr("id", "acs")
+                .attr("x", 650)
+                .attr("y", 30)
+                .attr('font-weight', 'bold')
+                .style("font-size", "18px")
+                .attr("class", "title")
+                .attr("text-anchor", "middle")
+                .text(stat + " contributes " + updated + " to the overall user behavior!")
+            ;
+        }
+    }
+
+</script>
+
+
+
+<script>
+
+    function writeup() {
+        window.location = "/sample"
+
+    }
+
+    function logout() {
+        const params = new URLSearchParams();
+        params.append('userName', localStorage.getItem('userName'));
+        params.append('sessionId', localStorage.getItem('sessionId'))
+        axios({
+            method: 'post',
+            url: 'http://localhost:3000/api/login/logout',
+            data: params
+        }).then(res => {
+            // console.log(res);
+            // console.log(res.data);
+            localStorage.removeItem('userName');
+            localStorage.removeItem('sessionId')
+
+            window.location = "/"
+        })
+            .catch(error => {
+                console.log("error")
+
+            });
+    }
+
+    function navigate() {
+        window.location = "/profile"
+
+    }
+
+
+    function getMoreData() {
+
+        var totalClicks1 = 0;
+        var upvote1 = 0;
+        var downvote1 = 0;
+        var watchTag1 = 0;
+        var ignoreTag1 = 0;
+        var questionLink1 = 0;
+        var AskQuestion1 = 0;
+        var TagClicked1 = 0;
+        var OptionsClicked1 = 0;
+
+        // document.getElementById("username").placeholder = localStorage.getItem('userName')
+
+        axios({
+            method: 'get',
+            url: 'http://localhost:3000/api/userLoggingTracking/getActivity/aaa'
+        }).then(res => {
+            // console.log(res);
+            // console.log(res.data);
+            // createGraph(res.data.data);
+            data = res.data.data
+
+            for (var i = 0; i < data.length; i++) {
+                // console.log("$$$$$$")
+                // console.log(data[i].activity.type);
+                if (data[i].activity !== undefined) {
+                    if (data[i].activity.type === "click") {
+                        totalClicks1 = totalClicks1 + 1;
+                    }
+
+                    if (data[i].activity.value !== undefined) {
+                        if (data[i].activity.value === "Up Vote") {
+                            upvote1 = upvote1 + 1;
+                        } else if (data[i].activity.value === "Down Vote") {
+                            downvote1 = downvote1 + 1;
+                        } else if (data[i].activity.action === "Question Clicked") {
+                            questionLink1 = questionLink1 + 1;
+                        } else if (data[i].activity.action === "Ignore Clicked") {
+                            ignoreTag1 = ignoreTag1 + 1;
+                        } else if (data[i].activity.action === "Watch Clicked") {
+                            watchTag1 = watchTag1 + 1;
+                        } else if (data[i].activity.value === "Ask Question") {
+                            AskQuestion1 = AskQuestion1 + 1;
+                        }else if (data[i].activity.action === "Tag Clicked") {
+                            TagClicked1 = TagClicked1 + 1;
+                        }else if (data[i].activity.action === "Options Clicked") {
+                            OptionsClicked1 = OptionsClicked1 + 1;
+                        }
+
+                    }
+                }
+            }
+            // console.log(total_vote)
+            console.log(upvote1 + "," + downvote1 +","+ watchTag1 + "," + ignoreTag1 + "," + questionLink1 + "," + AskQuestion1);
+        })
+            .catch(error => {
+                console.log("error")
+
+            });
+
+        axios({
+            method: 'get',
+            url: 'http://localhost:3000/api/userLoggingTracking/getActivity/bbb'
+        }).then(res => {
+            // console.log(res);
+            // console.log(res.data);
+            // createGraph(res.data.data);
+            data = res.data.data
+
+            for (var i = 0; i < data.length; i++) {
+                // console.log("$$$$$$")
+                // console.log(data[i].activity.type);
+                if (data[i].activity !== undefined) {
+                    if (data[i].activity.type === "click") {
+                        totalClicks1 = totalClicks1 + 1;
+                    }
+
+                    if (data[i].activity.value !== undefined) {
+                        if (data[i].activity.value === "Up Vote") {
+                            upvote1 = upvote1 + 1;
+                        } else if (data[i].activity.value === "Down Vote") {
+                            downvote1 = downvote1 + 1;
+                        } else if (data[i].activity.action === "Question Clicked") {
+                            questionLink1 = questionLink1 + 1;
+                        } else if (data[i].activity.action === "Ignore Clicked") {
+                            ignoreTag1 = ignoreTag1 + 1;
+                        } else if (data[i].activity.action === "Watch Clicked") {
+                            watchTag1 = watchTag1 + 1;
+                        } else if (data[i].activity.value === "Ask Question") {
+                            AskQuestion1 = AskQuestion1 + 1;
+                        }else if (data[i].activity.action === "Tag Clicked") {
+                            TagClicked1 = TagClicked1 + 1;
+                        }else if (data[i].activity.action === "Options Clicked") {
+                            OptionsClicked1 = OptionsClicked1 + 1;
+                        }
+
+                    }
+                }
+            }
+            // console.log(total_vote)
+            console.log(upvote1 + "," + downvote1 +","+ watchTag1 + "," + ignoreTag1 + "," + questionLink1 + "," + AskQuestion1);
+        })
+            .catch(error => {
+                console.log("error")
+
+            });
+
+        axios({
+            method: 'get',
+            url: 'http://localhost:3000/api/userLoggingTracking/getActivity/ccc'
+        }).then(res => {
+            // console.log(res);
+            // console.log(res.data);
+            // createGraph(res.data.data);
+            data = res.data.data
+
+            for (var i = 0; i < data.length; i++) {
+                // console.log("$$$$$$")
+                // console.log(data[i].activity.type);
+                if (data[i].activity !== undefined) {
+                    if (data[i].activity.type === "click") {
+                        totalClicks1 = totalClicks1 + 1;
+                    }
+
+                    if (data[i].activity.value !== undefined) {
+                        if (data[i].activity.value === "Up Vote") {
+                            upvote1 = upvote1 + 1;
+                        } else if (data[i].activity.value === "Down Vote") {
+                            downvote1 = downvote1 + 1;
+                        } else if (data[i].activity.action === "Question Clicked") {
+                            questionLink1 = questionLink1 + 1;
+                        } else if (data[i].activity.action === "Ignore Clicked") {
+                            ignoreTag1 = ignoreTag1 + 1;
+                        } else if (data[i].activity.action === "Watch Clicked") {
+                            watchTag1 = watchTag1 + 1;
+                        } else if (data[i].activity.value === "Ask Question") {
+                            AskQuestion1 = AskQuestion1 + 1;
+                        }else if (data[i].activity.action === "Tag Clicked") {
+                            TagClicked1 = TagClicked1 + 1;
+                        }else if (data[i].activity.action === "Options Clicked") {
+                            OptionsClicked1 = OptionsClicked1 + 1;
+                        }
+
+                    }
+                }
+            }
+            // console.log(total_vote)
+            console.log(upvote1 + "," + downvote1 +","+ watchTag1 + "," + ignoreTag1 + "," + questionLink1 + "," + AskQuestion1);
+
+            var total_vote = (upvote1+ downvote1)/totalClicks1;
+            var watchTag = watchTag1 / totalClicks1;
+            var ignoreTag = ignoreTag1 / totalClicks1;
+            var questionLink = questionLink1 / totalClicks1;
+            var AskQuestion = AskQuestion1 / totalClicks1;
+            var TagClicked = TagClicked1/totalClicks1;
+            var OptionsClicked =OptionsClicked1/totalClicks1;
+
+            var frequencydata = [
+                {
+                    "stat": "Total Votes",
+                    "frequency": total_vote
+                },
+                {
+                    "stat": "Options Clicked",
+                    "frequency": OptionsClicked
+                },
+                {
+                    "stat": "Watch Topic",
+                    "frequency": watchTag
+                },
+                {
+                    "stat": "Ignore Topic ",
+                    "frequency": ignoreTag
+                },
+                {
+                    "stat": "Search Questions",
+                    "frequency": questionLink
+                },
+                {
+                    "stat": "Ask Query",
+                    "frequency": AskQuestion
+                },
+                {
+                    "stat": "Detailed tag Search",
+                    "frequency": TagClicked
+                }]
+
+            console.log(frequencydata)
+            createGraphFreq(frequencydata)
+
+        })
+            .catch(error => {
+                console.log("error")
+
+            });
+
+
+    }
+
+
+    function createGraph(data) {
+        var totalClicks = 0;
+        var upvote = 0;
+        var downvote = 0;
+        var watchTag = 0;
+        var ignoreTag = 0;
+        var questionLink = 0;
+        var AskQuestion = 0;
+        var TagClicked = 0;
+        var OptionsClicked = 0;
+
+
+        // console.log(data.length);
+
+        for (var i = 0; i < data.length; i++) {
+            // console.log("here")
+            // console.log(data[i].activity.type);
+            if (data[i].activity !== undefined ||  data[i].activity.type !== undefined) {
+
+                if (data[i].activity.type === "click") {
+                    totalClicks = totalClicks + 1;
+                }
+
+                if (data[i].activity.value !== undefined) {
+                    if (data[i].activity.value === "Up Vote") {
+                        upvote = upvote + 1;
+                    } else if (data[i].activity.value === "Down Vote") {
+                        downvote = downvote + 1;
+                    } else if (data[i].activity.action === "Question Clicked") {
+                        questionLink = questionLink + 1;
+                    } else if (data[i].activity.action === "Ignore Clicked") {
+                        ignoreTag = ignoreTag + 1;
+                    } else if (data[i].activity.action === "Watch Clicked") {
+                        watchTag = watchTag + 1;
+                    } else if (data[i].activity.value === "Ask Question") {
+                        AskQuestion = AskQuestion + 1;
+                    }else if (data[i].activity.action === "Tag Clicked") {
+                        TagClicked = TagClicked + 1;
+                    }else if (data[i].activity.action === "Options Clicked") {
+                        OptionsClicked = OptionsClicked + 1;
+                    }
+
+                }
+            }
+        }
+        var total_vote = upvote + downvote;
+
+
+        // console.log(OptionsClicked)
+        // console.log(totalClicks);
+
+        // console.log(upvote + "," + downvote + ","+total_vote+","+ watchTag + "," + ignoreTag + "," + questionLink + "," + AskQuestion);
+
+        total_vote = total_vote/totalClicks;
+        watchTag = watchTag / totalClicks;
+        ignoreTag = ignoreTag / totalClicks;
+        questionLink = questionLink / totalClicks;
+        AskQuestion = AskQuestion / totalClicks;
+        TagClicked = TagClicked/totalClicks;
+        OptionsClicked =OptionsClicked/totalClicks;
+
+        var frequencydata = [
+            {
+                "stat": "Total Votes",
+                "frequency": total_vote
+            },
+            {
+                "stat": "Options Clicked",
+                "frequency": OptionsClicked
+            },
+            {
+                "stat": "Watch Topic",
+                "frequency": watchTag
+            },
+            {
+                "stat": "Ignore Topic ",
+                "frequency": ignoreTag
+            },
+            {
+                "stat": "Search Questions",
+                "frequency": questionLink
+            },
+            {
+                "stat": "Ask Query",
+                "frequency": AskQuestion
+            },
+            {
+                "stat": "Detailed tag Search",
+                "frequency": TagClicked
+            }]
+
+        createHighChart(frequencydata, data)
+
+        getMoreData()
+
+
+
+    }
+
+
+    function updatePage() {
+        if (localStorage.getItem('userName') === undefined || localStorage.getItem('userName') === "") {
+            window.location = "/"
+        }
+        document.getElementById("username").placeholder = localStorage.getItem('userName')
+
+        const params = new URLSearchParams();
+        params.append('userName', localStorage.getItem('userName'));
+        axios({
+            method: 'get',
+            url: 'http://localhost:3000/api/userLoggingTracking/getActivity/' + localStorage.getItem('userName'),
+        }).then(res => {
+            // console.log(res);
+            // console.log(res.data);
+            createGraph(res.data.data);
+
+            // createTable(res.data.data);
+        })
+            .catch(error => {
+                console.log("error")
+
+            });
+
+    }
+
+</script>
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/data.js"></script>
+<script src="https://code.highcharts.com/modules/drilldown.js"></script>
+
+<div id="container2" style="min-width: 200px; max-width: 1000px; height: 600px; margin: 0 auto"></div>
+
+<div>
+    <br>
+    <hr>
+    <h2 style="text-align: center"> Summarizing the top 3 User's behavior </h2> <hr>
+    <svg id="acs" style="text-align: center; width: 1350px; height: 50px"></svg>
+</div>
+
+
+
+
+
+
+<script>
+
+    function createHighChart(data, datafull) {
+        // console.log("here")
+        // console.log(datafull);
+
+        var upvote = 0;
+        var downvote = 0;
+        var totalClicks = 0;
+        var featuredPosts = 0;
+        var mostVoted = 0;
+        var newestPosts = 0;
+        var informativePosts = 0
+        var frequentPosts = 0
+        var activePosts = 0
+        var unansweredPosts = 0
+        var javaTag = 0
+        var nullpointerexceptionTag = 0
+        var stringTag = 0
+        var equalityTag = 0
+        var methodsTag = 0
+        var passTag = 0
+        var androidTag = 0
+        var threadTag = 0
+        var userInterfaceTag = 0
+        var debugTag = 0
+        var arraysTag = 0
+
+
+        for (var i = 0; i < datafull.length; i++) {
+            // console.log(data[i].activity.type);
+            if (datafull[i].activity !== undefined) {
+                if (datafull[i].activity.type === "click") {
+                    totalClicks = totalClicks + 1;
+                }
+
+                if (datafull[i].activity.value !== undefined) {
+                    if (datafull[i].activity.value === "Up Vote") {
+                        upvote = upvote + 1;
+                    } else if (datafull[i].activity.value === "Down Vote") {
+                        downvote = downvote + 1;
+                    } else if (datafull[i].activity.value === "featured") {
+                        featuredPosts = featuredPosts + 1;
+                    } else if (datafull[i].activity.value === "votes") {
+                        mostVoted = mostVoted + 1;
+                    } else if (datafull[i].activity.value === "newest") {
+                        newestPosts = newestPosts + 1;
+                    } else if (datafull[i].activity.value === "info") {
+                        informativePosts = informativePosts + 1;
+                    } else if (datafull[i].activity.value === "frequent") {
+                        frequentPosts = frequentPosts + 1;
+                    } else if (datafull[i].activity.value === "active") {
+                        activePosts = activePosts + 1;
+                    } else if (datafull[i].activity.value === "unanswered") {
+                        unansweredPosts = unansweredPosts + 1;
+                    } else if (datafull[i].activity.value.includes("java")) {
+                        javaTag = javaTag + 1;
+                    } else if (datafull[i].activity.value.includes("nullpointer")) {
+                        nullpointerexceptionTag = nullpointerexceptionTag + 1;
+                    } else if (datafull[i].activity.value.includes("string")) {
+                        stringTag = stringTag + 1;
+                    } else if (datafull[i].activity.value.includes("equality")) {
+                        equalityTag = equalityTag + 1;
+                    } else if (datafull[i].activity.value.includes("method")) {
+                        methodsTag = methodsTag + 1;
+                    } else if (datafull[i].activity.value.includes("pass")) {
+                        passTag = passTag + 1;
+                    } else if (datafull[i].activity.value.includes( "android")) {
+                        androidTag = androidTag + 1;
+                    } else if (datafull[i].activity.value.includes("thread")) {
+                        threadTag = threadTag + 1;
+                    } else if (datafull[i].activity.value.includes("interface")) {
+                        userInterfaceTag = userInterfaceTag + 1;
+                    } else if (datafull[i].activity.value.includes("debug")) {
+                        debugTag = debugTag + 1;
+                    } else if (datafull[i].activity.value.includes("arrays")) {
+                        arraysTag = arraysTag + 1;
+                    }
+
+                }
+            }
+
+        }
+        // console.log(upvote);
+        // console.log(downvote)
+
+        var totalVotes = upvote + downvote
+
+
+        upvote = upvote/(totalVotes)
+        downvote = 1 - upvote
+
+        var totalOptionsClicked = featuredPosts + mostVoted + newestPosts + informativePosts + frequentPosts + activePosts + unansweredPosts
+        var totaltagsClicked = javaTag + nullpointerexceptionTag + stringTag + methodsTag + passTag +androidTag + threadTag + userInterfaceTag + debugTag + arraysTag
+
+        // console.log(totaltagsClicked);
+
+        featuredPosts = featuredPosts / totalOptionsClicked
+        mostVoted = mostVoted / totalOptionsClicked
+        newestPosts = newestPosts/totalOptionsClicked
+        informativePosts = informativePosts/ totalOptionsClicked
+        frequentPosts = frequentPosts/ totalOptionsClicked
+        activePosts = activePosts/ totalOptionsClicked
+        unansweredPosts = unansweredPosts / totalOptionsClicked
+
+
+        javaTag = javaTag/totaltagsClicked
+        nullpointerexceptionTag = nullpointerexceptionTag/ totaltagsClicked
+        stringTag = stringTag/totaltagsClicked
+        methodsTag = methodsTag/totaltagsClicked
+        passTag = passTag/totaltagsClicked
+        threadTag = threadTag/totaltagsClicked
+        userInterfaceTag = userInterfaceTag/totaltagsClicked
+        debugTag = debugTag/totaltagsClicked
+        arraysTag = arraysTag/totaltagsClicked
+
+        // Create the chart
+        Highcharts.chart('container2', {
+            chart: {
+                type: 'pie'
+            },
+            title: {
+                text: localStorage.getItem('userName') + '\'s behavior. Total Interactions = ' + totalClicks
+            },
+            subtitle: {
+                text: 'Click on slices for details'
+            },
+            plotOptions: {
+                series: {
+                    dataLabels: {
+                        enabled: true,
+                        format: '{point.name}: {point.y:.2f}%'
+                    }
+                }
+            },
+
+            tooltip: {
+                headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
+
+            },
+
+            "series": [
+                {
+                    "name": "User Behavior",
+                    "colorByPoint": true,
+                    "data": [
+                        {
+                            "name": data[0].stat,
+                            "y": data[0].frequency,
+                            "drilldown": data[0].stat
+                        },
+                        {
+                            "name": data[1].stat,
+                            "y": data[1].frequency,
+                            "drilldown": data[1].stat
+                        },
+                        {
+                            "name": data[2].stat,
+                            "y": data[2].frequency,
+                            "drilldown": null
+                        },
+                        {
+                            "name": data[3].stat,
+                            "y": data[3].frequency,
+                            "drilldown": null
+                        },
+                        {
+                            "name": data[4].stat,
+                            "y": data[4].frequency,
+                            "drilldown": null
+                        },
+                        {
+                            "name": data[5].stat,
+                            "y": data[5].frequency,
+                            "drilldown": null
+                        },
+                        {
+                            "name": data[6].stat,
+                            "y": data[6].frequency,
+                            "drilldown": data[6].stat
+                        }
+                    ]
+                }
+            ],
+            "drilldown": {
+                "series": [
+                    {
+                        "name": data[0].stat,
+                        "id": data[0].stat,
+                        "data": [
+                            [
+                                "Up Vote",
+                                upvote
+                            ],
+                            [
+                                "Down Vote",
+                                downvote
+                            ],
+
+                        ]
+                    },
+                    {
+                        "name": data[1].stat,
+                        "id": data[1].stat,
+                        "data": [
+                            [
+                                "Featured Posts",
+                                featuredPosts
+                            ],
+                            [
+                                "Most Voted",
+                                mostVoted
+                            ],
+                            [
+                                "Informative Posts",
+                                informativePosts
+                            ],
+                            [
+                                "Frequent Posts",
+                                frequentPosts
+                            ],
+                            [
+                                "Active Posts",
+                                activePosts
+                            ],
+                            [
+                                "Unanswered Posts",
+                                unansweredPosts
+                            ],
+                            [
+                                "Newest Posts",
+                                newestPosts
+                            ]
+                        ]
+                    },
+                    {
+                        "name": data[6].stat,
+                        "id": data[6].stat,
+                        "data": [
+                            [
+                                "Java",
+                                javaTag
+                            ],
+                            [
+                                "NullPointerException",
+                                nullpointerexceptionTag
+                            ],
+                            [
+                                "String",
+                                stringTag
+                            ],
+                            [
+                                "Methods",
+                                methodsTag
+                            ],
+                            [
+                                "Parameter-Passing",
+                                passTag
+                            ],
+                            [
+                                "thread",
+                                threadTag
+                            ],
+                            [
+                                "User Interface",
+                                userInterfaceTag
+                            ],
+                            [
+                                "Arrays",
+                                arraysTag
+                            ],
+                            [
+                                "Debugging",
+                                debugTag
+                            ]
+                        ]
+                    }
+                ]
+            }
+        });
+    }
+</script>
+
+
+
+</body>
+
+
+</html>

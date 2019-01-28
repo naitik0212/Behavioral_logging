@@ -1,0 +1,473 @@
+<html>
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/series-label.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+
+    <style>
+    :root {
+        --input-padding-x: 1.5rem;
+        --input-padding-y: .75rem;
+    }
+
+    body {
+        background: #9CECFB;
+        /* fallback for old browsers */
+        background: -webkit-linear-gradient(to right, #65C7F7, #9CECFB, white);
+        /* Chrome 10-25, Safari 5.1-6 */
+        background: linear-gradient(to right, #65C7F7, #9CECFB, white);
+        /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    }
+
+    #container2 {
+        min-width: 310px;
+        max-width: 800px;
+        height: 400px;
+        margin: 0 auto
+    }
+
+    .card-signin {
+        border: 0;
+        border-radius: 3rem;
+        box-shadow: 0 0.5rem 1rem 0 rgba(0, 0, 0, 0.1);
+    }
+
+    .card-signin .card-title {
+        margin-bottom: 2rem;
+        font-weight: 300;
+        font-size: 1.5rem;
+    }
+
+    .card-signin .card-body {
+        padding: 2rem;
+    }
+    .form-signin {
+        width: 100%;
+    }
+
+    .form-signin .btn {
+        font-size: 80%;
+        border-radius: 5rem;
+        letter-spacing: .1rem;
+        font-weight: bold;
+        padding: 1rem;
+        transition: all 0.2s;
+    }
+
+    .form-label-group {
+        position: relative;
+        margin-bottom: 1rem;
+    }
+
+    .form-label-group input {
+        border-radius: 2rem;
+    }
+
+    .form-label-group>input,
+    .form-label-group>label {
+        padding: var(--input-padding-y) var(--input-padding-x);
+    }
+
+    .form-label-group>label {
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: block;
+        width: 100%;
+        margin-bottom: 0;
+        /* Override default `<label>` margin */
+        line-height: 1.5;
+        color: #495057;
+        border: 1px solid transparent;
+        border-radius: .25rem;
+        transition: all .1s ease-in-out;
+    }
+
+    .form-label-group input::-webkit-input-placeholder {
+        color: transparent;
+    }
+
+    .form-label-group input:-ms-input-placeholder {
+        color: transparent;
+    }
+
+    .form-label-group input::-ms-input-placeholder {
+        color: transparent;
+    }
+
+    .form-label-group input::-moz-placeholder {
+        color: transparent;
+    }
+
+    .form-label-group input::placeholder {
+        color: transparent;
+    }
+
+    .form-label-group input:not(:placeholder-shown) {
+        padding-top: calc(var(--input-padding-y) + var(--input-padding-y) * (2 / 3));
+        padding-bottom: calc(var(--input-padding-y) / 3);
+    }
+
+    .form-label-group input:not(:placeholder-shown)~label {
+        padding-top: calc(var(--input-padding-y) / 3);
+        padding-bottom: calc(var(--input-padding-y) / 3);
+        font-size: 12px;
+        color: #777;
+    }
+
+    .flex {
+        display: flex;
+        text-align: right;
+    }
+    .vertical {
+        flex-direction: column;
+        margin: 0 1em;
+    }
+    .vertical div:first-child {
+        font-weight: bold;
+    }
+    .outer {
+        align-items: flex-end;
+    }
+    .outer > div:first-child {
+        border-right: 1px solid black;
+        padding-right: 1em;
+        margin-right: .5em;
+    }
+    .col {
+        margin: 0 .5em;
+    }
+    .col div:first-child, .outer > div:first-child {
+        font-weight: bold;
+    }
+
+</style>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+<body onload="updatePage();">
+
+
+
+<div class="container">
+
+    <div class="container">
+        <div class="float-right">
+            <br>
+            <button class="btn btn-danger" onclick="logout()">Logout</button>
+        </div>
+
+        <div class="row">
+
+            <div class="col-sm-9 col-md-7 col-lg-5 mx-auto" style="text-align: center">
+                <div class="card card-signin my-5 ">
+                    <div class="card-body">
+                <fieldset disabled>
+    <div class="form-group overlay">
+        <h4 >Welcome to Profile Page</h4>
+
+
+        <input style="text-align: center" type="text" id="username" class="form-label-group form-control" placeholder="">
+    </div>
+</fieldset>
+
+<a href="https://stackoverflow.com/questions/tagged/java?sort=frequent&pageSize=15" target="_blank" style="color: red">Go To StackOverflow</a>
+<br/>
+<br/>
+
+<button class="btn btn-success" onclick="navigate()">Visualizations</button>
+ <button class="btn btn-info" onclick="writeup()">Writeup</button>
+
+                        <br/>
+            </div>
+        </div>
+            </div>
+        </div>
+
+    </div>
+    <hr/>
+
+
+    <div id="container2">
+
+    </div>
+    <hr/>
+
+
+    <h3 style="text-align: center"> List of sections with timing </h3>
+    <hr/>
+
+        <table class="table outer">
+                    <tr>
+                        <th>No.</th>
+                        <th>SessionId</th>
+                        <th>Date</th>
+                        <th>Login Time</th>
+                        <th>Logout Time</th>
+                    </tr>
+                </table>
+
+<table class="table outer">
+    <tbody id="tbody" ></tbody>
+</table>
+</div>
+
+<hr />
+
+<div style="margin-right: 100px; margin-left: 100px; color:black">
+    <h3 style=" text-align:center; margin-right: 50px; margin-left: 50px">List of Actions Logged from StackOverflow</h3>
+    <br>
+
+    <ul style="font-size:18px;font-weight: bold">
+        <li>Watch Topic</li>
+        <li>Ignore Topic</li>
+        <li>Browse existing Question </li>
+        <li>New Question Asked</li>
+        <li>Search based on options given (New, Frequent etc)</li>
+        <li>Relevant Tags Clicked</li>
+        <li>Total Votes Given - Upvote and DownVote</li>
+    </ul>
+    <hr>
+    <div style="text-align: center">
+        <h3 style=" text-align:center; margin-right: 50px; margin-left: 50px">Why do you decide to log these actions?</h3>
+
+        <br>
+    </h3>
+    <p style="font-size:18px;font-weight: bold; text-align:justify">
+        User behavioral loggging place an important part on deciding a User-Centric Design. Based on the hits that user perform on the page it can be decided, where a certain information should be displayed for an efficient User Interface.<br>
+
+        <br> Various actions on stackoverflow are recorded by a chrome extension which runs in the background when the user goes to the stackoverflow link from the current website.
+        <br>1. The action of clicking Watch Topic and Ignore Topic shows the interest of the user in stackoverflow's current topic.
+        <br>2. The actions of clicking and going through various questions using the browse existing question action denotes that a user is finding for some solution on stackoverflow.
+        <br>3. The action New Question asked denotes that a user has certain query in the topic and he is willing to start a new discussion ovr the topic on stackoverflow.
+        <br>4. The action Search based on options like New posts, information of topic, Frequent or featured post clicked, sorting based on votes received, active and unanswered tags denote the behavior of the user, what he likes, how much he logs into the system to gain knowledge.
+        <br>5. The action of Tag clicks shows users interest in a particular question thread and he wants to dig in deep in the topic on stackoverflow.
+        <br>6. The action of votes given shows the user critic on a particular topic and shows his acceptance to the topic.
+
+    </p>
+        <hr/>
+
+
+    </div>
+</div>
+
+
+
+
+
+
+
+</body>
+
+<script>
+
+    function logout() {
+        const params = new URLSearchParams();
+        params.append('userName', localStorage.getItem('userName'));
+        params.append('sessionId',localStorage.getItem('sessionId'))
+        axios({
+            method: 'post',
+            url: 'http://localhost:3000/api/login/logout',
+            data: params
+        }).then(res => {
+            // console.log(res);
+            // console.log(res.data);
+            localStorage.removeItem('userName');
+            localStorage.removeItem('sessionId')
+
+            window.location="/"
+        })
+            .catch(error=>{
+                console.log("error")
+
+            });
+    }
+
+    function navigate() {
+        window.location = "/visualization"
+
+    }
+
+    function writeup() {
+        window.location = "/sample"
+
+    }
+
+
+    function SumHours(smon,fmon) {
+        var diff = 0 ;
+        if (smon && fmon) {
+            smon = ConvertToSeconds(smon);
+            fmon = ConvertToSeconds(fmon);
+            diff = Math.abs( fmon - smon ) ;
+            console.log( 'time difference is : ' + diff );
+        }
+
+        function ConvertToSeconds(time) {
+            var splitTime = time.split(":");
+            return splitTime[0] * 3600 + splitTime[1] * 60;
+        }
+
+        return diff;
+
+        // function secondsTohhmmss(secs) {
+        //     var hours = parseInt(secs / 3600);
+        //     var seconds = parseInt(secs % 3600);
+        //     var minutes = parseInt(seconds / 60) ;
+        //     return hours + "hours : " + minutes + "minutes " + seconds;
+        // }
+    }
+
+
+    function createTimestampGraph(timedata) {
+
+        console.log(timedata);
+
+        Highcharts.chart('container2', {
+
+            title: {
+                text: 'Amount of time spent online'
+            },
+
+            subtitle: {
+                text: 'per session (if logout missing, default considered = 2 minutes)'
+            },
+
+            yAxis: {
+                title: {
+                    text: 'Time in Minutes'
+                }
+            },
+            xAxis: {
+                title: {
+                    text: 'Session Numbers'
+                }
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'middle'
+            },
+
+            plotOptions: {
+                series: {
+                    label: {
+                        connectorAllowed: false
+                    },
+                }
+            },
+
+            series: [timedata],
+
+            responsive: {
+                rules: [{
+                    condition: {
+                        maxWidth: 500
+                    },
+                    chartOptions: {
+                        legend: {
+                            layout: 'horizontal',
+                            align: 'center',
+                            verticalAlign: 'bottom'
+                        }
+                    }
+                }]
+            }
+
+        });
+
+    }
+
+    function createTable(obj) {
+        console.log(obj);
+        document.getElementById("username").placeholder = obj[0].userName;
+        var globalCounter = 0;
+        var tbody = document.getElementById('tbody');
+        var minutes = []
+        // console.log(obj[0].login);
+        for (var i = 0; i < obj.length; i++) {
+            // console.log(obj[i].login)
+            // console.log(obj[i].sessionId)
+
+
+
+
+
+
+            var tr = "<tr>";
+
+            // console.log(obj[i].login)
+            var login = obj[i].login.toString()? new Date(obj[i].login.toString()) : '-'
+            // console.log(obj[i].logout)
+            if(obj[i].logout === undefined || obj[i].logout === null || obj[i].logout === '' ){
+                var logout = '-'
+            }else{
+                // var logout = obj[i].logout.toString();
+                logout = new Date(obj[i].logout.toString())
+                logout = logout.toLocaleTimeString();
+            }
+
+            tr += "<td width='100px'>" + (i + 1) + "</td>" +"<td width='250px'>" + obj[i].sessionId.toString() + "</td>" + "<td width='200px'>" + login.toLocaleDateString() + "</td>"+"<td>" + login.toLocaleTimeString() + "</td>" + "<td>" + logout+ "</td> </tr>";
+            tbody.innerHTML += tr;
+
+            if(logout !== '-'){
+                minutes[i] = (SumHours(login.toLocaleTimeString(),logout)/60 + 1)
+                // console.log('seconds'+  seconds[i])
+            }else {
+                minutes[i] = 2
+            }
+        }
+
+
+        // function getseconds(seconds) {
+        //     var requiredArray = []
+        //
+        //
+        //
+        //
+        //     return
+
+
+        var timedata = {
+            name: 'Minutes',
+            data: minutes
+        }
+
+        setTimeout(createTimestampGraph(timedata), 3000);
+
+    }
+
+    function updatePage() {
+        if(localStorage.getItem('userName')=== undefined || localStorage.getItem('userName') === "" ){
+            window.location="/"
+        }
+
+        const params = new URLSearchParams();
+        params.append('userName', localStorage.getItem('userName'));
+        axios({
+            method: 'post',
+            url: 'http://localhost:3000/api/login/timestamp',
+            data: params
+        }).then(res => {
+            console.log(res);
+            console.log(res.data);
+            createTable(res.data.data);
+        })
+            .catch(error=>{
+                console.log("error")
+
+            });
+    }
+</script>
+
+
+
+</html>

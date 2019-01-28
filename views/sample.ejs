@@ -1,0 +1,399 @@
+<html>
+
+<style>
+    :root {
+        --input-padding-x: 1.5rem;
+        --input-padding-y: .75rem;
+    }
+
+    body {
+        background: #9CECFB;
+        /* fallback for old browsers */
+        background: -webkit-linear-gradient(to right, #65C7F7, #9CECFB, white);
+        /* Chrome 10-25, Safari 5.1-6 */
+        background: linear-gradient(to right, #65C7F7, #9CECFB, white);
+        /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    }
+
+    .axis path,
+    .axis line {
+        fill: none;
+        stroke: #000;
+        shape-rendering: crispEdges;
+    }
+
+    .bar {
+        fill: orange;
+    }
+
+    .bar:hover {
+        fill: orangered;
+    }
+
+    .x.axis path {
+        display: none;
+    }
+
+    .d3-tip {
+        line-height: 1;
+        font-weight: bold;
+        padding: 12px;
+        background: rgba(0, 0, 0, 0.8);
+        color: #fff;
+        border-radius: 2px;
+    }
+
+    /* Creates a small triangle extender for the tooltip */
+    .d3-tip:after {
+        box-sizing: border-box;
+        display: inline;
+        font-size: 10px;
+        width: 100%;
+        line-height: 1;
+        color: rgba(0, 0, 0, 0.8);
+        content: "\25BC";
+        position: absolute;
+        text-align: center;
+    }
+
+    /* Style northward tooltips differently */
+    .d3-tip.n:after {
+        margin: -1px 0 0 0;
+        top: 100%;
+        left: 0;
+    }
+
+    .card-signin {
+        border: 0;
+        border-radius: 1rem;
+        box-shadow: 0 0.5rem 1rem 0 rgba(0, 0, 0, 0.1);
+    }
+
+    .card-signin .card-title {
+        margin-bottom: 2rem;
+        font-weight: 300;
+        font-size: 1.5rem;
+    }
+
+    .card-signin .card-body {
+        padding: 2rem;
+    }
+
+    .form-signin {
+        width: 100%;
+    }
+
+    .form-signin .btn {
+        font-size: 80%;
+        border-radius: 5rem;
+        letter-spacing: .1rem;
+        font-weight: bold;
+        padding: 1rem;
+        transition: all 0.2s;
+    }
+
+    .form-label-group {
+        position: relative;
+        margin-bottom: 1rem;
+    }
+
+    .form-label-group input {
+        border-radius: 2rem;
+    }
+
+    .form-label-group > input,
+    .form-label-group > label {
+        padding: var(--input-padding-y) var(--input-padding-x);
+    }
+
+    .form-label-group > label {
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: block;
+        width: 100%;
+        margin-bottom: 0;
+        /* Override default `<label>` margin */
+        line-height: 1.5;
+        color: #495057;
+        border: 1px solid transparent;
+        border-radius: .25rem;
+        transition: all .1s ease-in-out;
+    }
+
+    .form-label-group input::-webkit-input-placeholder {
+        color: transparent;
+    }
+
+    .form-label-group input:-ms-input-placeholder {
+        color: transparent;
+    }
+
+    .form-label-group input::-ms-input-placeholder {
+        color: transparent;
+    }
+
+    .form-label-group input::-moz-placeholder {
+        color: transparent;
+    }
+
+    .form-label-group input::placeholder {
+        color: transparent;
+    }
+
+    .form-label-group input:not(:placeholder-shown) {
+        padding-top: calc(var(--input-padding-y) + var(--input-padding-y) * (2 / 3));
+        padding-bottom: calc(var(--input-padding-y) / 3);
+    }
+
+    .form-label-group input:not(:placeholder-shown) ~ label {
+        padding-top: calc(var(--input-padding-y) / 3);
+        padding-bottom: calc(var(--input-padding-y) / 3);
+        font-size: 12px;
+        color: #777;
+    }
+
+    .flex {
+        display: flex;
+        text-align: right;
+    }
+
+    .vertical {
+        flex-direction: column;
+        margin: 0 1em;
+    }
+
+    .vertical div:first-child {
+        font-weight: bold;
+    }
+
+    .outer {
+        align-items: flex-end;
+    }
+
+    .outer > div:first-child {
+        border-right: 1px solid black;
+        padding-right: 1em;
+        margin-right: .5em;
+    }
+
+    .col {
+        margin: 0 .5em;
+    }
+
+    .col div:first-child, .outer > div:first-child {
+        font-weight: bold;
+    }
+
+</style>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+<body onload="updatePage();">
+
+<div class="container">
+    <div class="container">
+        <div class="float-right">
+            <br>
+            <button class="btn btn-danger" onclick="logout()">Logout</button>
+        </div>
+        <div class="row">
+
+            <div class="col-sm-9 col-md-7 col-lg-5 mx-auto" style="text-align: center">
+                <div class="card card-signin my-5 ">
+                    <div class="card-body">
+
+
+                        <fieldset disabled>
+                            <div class="form-group overlay">
+                                <h4>Welcome to Writeup</h4>
+                                <input style="text-align: center" type="text" id="username"
+                                       class="form-label-group form-control" placeholder="">
+                            </div>
+                        </fieldset>
+
+                        <a href="https://stackoverflow.com/questions/tagged/java?sort=frequent&pageSize=15" target="_blank" style="color: red">Go To StackOverflow</a>
+                        <br/>
+                        <br/>
+
+                        <button class="btn btn-success" onclick="navigate()">Profile Page</button>
+                        <button class="btn btn-info" onclick="visualization()">Visualization</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<hr/>
+<div style="margin-right: 100px; margin-left: 100px; color:black">
+    <h3 style=" text-align:center; margin-right: 50px; margin-left: 50px">List of Actions Logged from StackOverflow</h3>
+    <br>
+
+    <ul style="font-size:18px;font-weight: bold">
+        <li>Watch Topic</li>
+        <li>Ignore Topic</li>
+        <li>Browse existing Question </li>
+        <li>New Question Asked</li>
+        <li>Search based on options given (New, Frequent etc)</li>
+        <li>Relevant Tags Clicked</li>
+        <li>Total Votes Given - Upvote and DownVote</li>
+    </ul>
+    <hr>
+    <div style="text-align: center">
+        <h3 style=" text-align:center; margin-right: 50px; margin-left: 50px">Why do you decide to log these actions?</h3>
+
+        <br>
+
+        <p style="font-size:18px;font-weight: bold; text-align:justify">
+            User behavioral logging place an important part on deciding a User-Centric Design. Based on the hits that user perform on the page it can be decided, where a certain information should be displayed for an efficient User Interface.<br>
+
+            <br> Various actions on stackoverflow are recorded by a chrome extension which runs in the background when the user goes to the stackoverflow link from the current website.
+            <br>1. The action of clicking Watch Topic and Ignore Topic shows the interest of the user in stackoverflow's current topic.
+            <br>2. The actions of clicking and going through various questions using the browse existing question action denotes that a user is finding for some solution on stackoverflow.
+            <br>3. The action New Question asked denotes that a user has certain query in the topic and he is willing to start a new discussion over the topic on stackoverflow.
+            <br>4. The action Search based on options like New posts, information of topic, Frequent or featured post clicked, sorting based on votes received, active and unanswered tags denote the behavior of the user, what he likes, how much he logs into the system to gain knowledge.
+            <br>5. The action of Tag clicks shows users interest in a particular question thread and he wants to dig in deep in the topic on stackoverflow.
+            <br>6. The action of votes given shows the user critic on a particular topic and shows his acceptance to the topic.
+
+        </p>
+        <hr>
+        <h3 style=" text-align:center; margin-right: 50px; margin-left: 50px">Description of Visualizations - Analysis and Findings</h3> <br>
+        <p style="font-size:18px;font-weight: bold; text-align:justify">
+            The development of visualization was done based on the way the user has interacted with the stackoverflow website. Whenever the user visits the stackoverflow page, it denotes that he wants to solve a query.<br>
+            A total of three interactive visualizations were developed based on the user behavior and user logging patterns on the stackoverflow website.<br>
+        </p>
+
+        <h4 style=" text-align:center; margin-right: 50px; margin-left: 50px">Time-Based Logging (Interactive Line Graph on Profile page)</h4> <br>
+        <p style="font-size:18px;font-weight: bold; text-align:justify">
+         Using the developed, login, logout time and session management, this visualization logs the amount of time a user would have spent finding the results on the stackoverflow website.
+        </p>
+        <li style="font-size:18px;font-weight: bold; text-align:justify">
+            PATTERN 1 - Based on the duration of the session, details regarding how much work a user does, whats his speed of interaction, and how much does his use stackoverflow can be found.
+        </li>
+
+        <br>
+
+        <h4 style=" text-align:center; margin-right: 50px; margin-left: 50px">Actions-Based Logging (Hierarchical Pie Chart on Visualization page)</h4> <br>
+        <p style="font-size:18px;font-weight: bold; text-align:justify">
+            Using the actions clicked by the user from the aforementioned list, this visualization logs the interactions with the various elements on stackoverflow and groups it based on the actions performed.</p>
+        <p style="font-size:18px;font-weight: bold; text-align:justify">
+            This groups denotes, the users interaction with the stackoverflow, his usage and his interests. Upon drilling down, the visualization provides the holistic view of his interest in a particular section.</p>
+        <li style="font-size:18px;font-weight: bold; text-align:justify">
+            PATTERN 2 - User has a lot of votes given, which denotes, he is an experienced person with a good knowledge on subject matter and he expresses his views efficiently.
+        </li>
+        <li style="font-size:18px;font-weight: bold; text-align:justify">
+            PATTERN 3 - User has browsed a lot on a topic and the tags that he has clicked always relate to a particular topic, whose analysis can help to devise a User Interface for him and all alike minded people interested in similar topics.
+        </li>
+        <li style="font-size:18px;font-weight: bold; text-align:justify">
+            PATTERN 4 - User has asked a lot of questions or clicked links to various questions, denoting that he is been browsing and wanting answer to particular topics.
+        </li>
+
+        <br>
+
+        <h4 style=" text-align:center; margin-right: 50px; margin-left: 50px">Summary of top users Logging pattern (Interactive Bar graph on Visualization page)</h4> <br>
+        <p style="font-size:18px;font-weight: bold; text-align:justify">
+            The summary of top users helps the user and developer know what are the topics that are usually clicked and browsed by the top users.
+        </p>
+        <li style="font-size:18px;font-weight: bold; text-align:justify">
+            PATTERN 5 - This helps decide the importance of particular elements used by the top users and accordingly align them based on requirements.
+        </li>
+
+        <br>
+        <hr>
+
+        <h4 style=" text-align:center; margin-right: 50px; margin-left: 50px">Steps to find results</h4> <br>
+        <p style="font-size:18px;font-weight: bold; text-align:justify">
+           Capturing all the required data via the chrome extension on stack overflow and then finding patterns and use cases which define a particular user and displaying those trends dynamically on page load to each user.<br>
+            Also providing the details of the top users for them to compare so that they could get to know efficient ways to use stackoverflow.
+        </p>
+
+
+        <hr>
+
+        <h4 style=" text-align:center; margin-right: 50px; margin-left: 50px">References</h4> <br>
+        <li style="font-size:18px;font-weight: bold; text-align:justify">
+          MongoDB and NodeJS Setup (Structure) -> <a href=" https://medium.com/netscape/mean-app-tutorial-with-angular-4-part-1-18691663ea96" >https://medium.com/netscape/mean-app</a>
+        </li>
+
+        <li style="font-size:18px;font-weight: bold; text-align:justify">
+            Chrome Extension Setup -> <a href="https://developer.chrome.com/extensions/getstarted" >https://developer.chrome.com/extensions/getstarted</a>
+        </li>
+
+        <li style="font-size:18px;font-weight: bold; text-align:justify">
+           Various functions and methodology -> <a href="https://stackoverflow.com" >https://stackoverflow.com</a>
+        </li>
+
+        <li style="font-size:18px;font-weight: bold; text-align:justify">
+            Documentation and examples of Technologies used -> MongoDB, NodeJS, Express, JavaScript, Axios, D3, HighCharts, HTML5, CSS, BootStrap
+        </li>
+        <hr>
+
+
+    </div>
+</div>
+
+</body>
+
+
+<script>
+
+    function logout() {
+        const params = new URLSearchParams();
+        params.append('userName', localStorage.getItem('userName'));
+        params.append('sessionId', localStorage.getItem('sessionId'))
+        axios({
+            method: 'post',
+            url: 'http://localhost:3000/api/login/logout',
+            data: params
+        }).then(res => {
+            // console.log(res);
+            // console.log(res.data);
+            localStorage.removeItem('userName');
+            localStorage.removeItem('sessionId')
+
+            window.location = "/"
+        })
+            .catch(error => {
+                console.log("error")
+
+            });
+    }
+
+    function navigate() {
+        window.location = "/profile"
+
+    }
+
+    function visualization() {
+        window.location = "/visualization"
+
+    }
+
+
+
+    function updatePage() {
+        if (localStorage.getItem('userName') === undefined || localStorage.getItem('userName') === "") {
+            window.location = "/"
+        }
+        document.getElementById("username").placeholder = localStorage.getItem('userName')
+    }
+
+</script>
+
+
+
+
+
+</html>
